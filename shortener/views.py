@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView
 from ipware import get_client_ip
@@ -43,6 +44,9 @@ class LinkGenericAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):  # noqa
         count = Link.objects.count()  # noqa
+        popular = Link.objects.annotate(count=Count('client')).order_by('-count')[:10]  # noqa
+        serializer = self.get_serializer(popular, many=True)
         return Response({
-            'count': count
+            'count': count,
+            'popular': serializer.data,
         }, status=status.HTTP_200_OK)
