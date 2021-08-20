@@ -31,10 +31,8 @@ class LinkCreateAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(link)
         return Response(serializer.data)
 
-
-class LinkAPIView(views.APIView):
-    def get(self, request, format=None):  # noqa
-        count = Link.objects.all().count()  # noqa
+    def get(self, request, *args, **kwargs):  # noqa
+        count = Link.objects.count()  # noqa
         return Response({
             'count': count
         }, status=status.HTTP_200_OK)
