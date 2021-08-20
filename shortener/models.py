@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.sites.models import Site
 from django.db import models
 from django.urls import reverse
 
@@ -14,8 +15,12 @@ class Link(models.Model):
     id = models.CharField(max_length=32, default=Helpers.delimiter, primary_key=True, editable=False)
     original = models.URLField(max_length=255, unique=True)
 
+    @property
+    def shortened(self):
+        return Site.objects.get_current().domain + reverse('shortener:link-redirect', kwargs={'id': self.id})
+
     def __str__(self):
-        return f'{self.id} ➡️ {self.original}'
+        return f'{self.shortened} ➡️ {self.original}'
 
 
 class Client(models.Model):
