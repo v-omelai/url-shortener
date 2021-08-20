@@ -1,11 +1,10 @@
 from django.urls import path
 
-from shortener.views import LinkCreateAPIView, LinkRedirectView, LinkAPIView
+from shortener.views import LinkRedirectView, LinkGenericAPIView
 
 app_name = 'shortener'
 
 urlpatterns = [
-    path('', LinkCreateAPIView.as_view(), name='link-create'),
-    path('features/', LinkAPIView.as_view(), name='link-features'),
+    path('', LinkGenericAPIView.as_view(), name='link-create-plus-features'),
     path('<str:id>/', LinkRedirectView.as_view(), name='link-redirect'),
 ]

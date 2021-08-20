@@ -24,5 +24,8 @@ class Link(models.Model):
 
 
 class Client(models.Model):
-    address = models.GenericIPAddressField(protocol='IPv4', unique=True)
+    address = models.GenericIPAddressField(unique=True)
     links = models.ManyToManyField(Link)
+
+    def __str__(self):
+        return self.address
