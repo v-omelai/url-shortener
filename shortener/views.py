@@ -1,7 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView
-from rest_framework import generics
+from rest_framework import generics, status, views
 from rest_framework.response import Response
 
 from shortener.models import Link
@@ -15,7 +15,7 @@ class LinkRedirectView(RedirectView):
         return link.original
 
 
-class LinkCreateView(generics.CreateAPIView):
+class LinkCreateAPIView(generics.CreateAPIView):
     queryset = Link.objects.all()  # noqa
     serializer_class = LinkSerializer
 
@@ -30,3 +30,11 @@ class LinkCreateView(generics.CreateAPIView):
             return super().create(request, *args, **kwargs)
         serializer = self.get_serializer(link)
         return Response(serializer.data)
+
+
+class LinkAPIView(views.APIView):
+    def get(self, request, format=None):  # noqa
+        count = Link.objects.all().count()  # noqa
+        return Response({
+            'count': count
+        }, status=status.HTTP_200_OK)
